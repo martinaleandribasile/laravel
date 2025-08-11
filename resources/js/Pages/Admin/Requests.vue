@@ -25,41 +25,66 @@
             </nav>
         </aside>
         <main class="main-content">
-            <h1 class="text-2xl font-bold mb-6">Gestione richieste utenti</h1>
             <div class="mb-4 flex gap-4">
-            <select v-model="selectedStato" @change="filter" class="border rounded px-3 py-2">
-                <option value="">Stati</option>
-                <option value="in_attesa">In attesa</option>
-                <option value="confermata">Confermata</option>
-                <option value="annullata">Annullata</option>
-            </select>
+                <select v-model="selectedStato" @change="filter" class="border rounded px-3 py-2">
+                    <option value="">Stati</option>
+                    <option value="in_attesa">In attesa</option>
+                    <option value="confermata">Confermata</option>
+                    <option value="annullata">Annullata</option>
+                </select>
+                <button :class="['px-4 py-2 rounded-l', filtro === 'normali' ? 'bg-blue-600 text-white' : 'bg-gray-200']" @click="filtro = 'normali'">Richieste inventario</button>
+                <button :class="['px-4 py-2 rounded-r', filtro === 'acquisto' ? 'bg-blue-600 text-white' : 'bg-gray-200']" @click="filtro = 'acquisto'">Richieste acquisto</button>
             </div>
+
             <table class="min-w-full bg-white border rounded shadow">
-            <thead>
-                <tr>
-                <th class="px-4 py-2 border-b">Utente</th>
-                <th class="px-4 py-2 border-b">Articolo</th>
-                <th class="px-4 py-2 border-b">Serial</th>
-                <th class="px-4 py-2 border-b">Periodo</th>
-                <th class="px-4 py-2 border-b">Note</th>
-                <th class="px-4 py-2 border-b">Stato</th>
-                <th class="px-4 py-2 border-b">Azioni</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="req in requests" :key="req.id">
-                <td class="px-4 py-2 border-b">{{ req.user?.name }}</td>
-                <td class="px-4 py-2 border-b">{{ req.item_detail?.item?.name }}</td>
-                <td class="px-4 py-2 border-b">{{ req.item_detail?.seriale }}</td>
-                <td class="px-4 py-2 border-b">{{ req.data_inizio }} - {{ req.data_fine }}</td>
-                <td class="px-4 py-2 border-b">{{ req.note }}</td>
-                <td class="px-4 py-2 border-b"><span :class="statusClass(req.stato)">{{ req.stato }}</span></td>
-                <td class="px-4 py-2 border-b">
-                    <button v-if="req.stato === 'in_attesa'" @click="confirm(req.id)" class="bg-green-600 text-white px-2 py-1 rounded mr-2">Conferma</button>
-                    <button v-if="req.stato === 'in_attesa'" @click="cancel(req.id)" class="bg-red-600 text-white px-2 py-1 rounded">Annulla</button>
-                </td>
-                </tr>
-            </tbody>
+                <thead>
+                    <tr v-if="filtro === 'normali'">
+                        <th class="px-4 py-2 border-b">Utente</th>
+                        <th class="px-4 py-2 border-b">Articolo</th>
+                        <th class="px-4 py-2 border-b">Serial</th>
+                        <th class="px-4 py-2 border-b">Periodo</th>
+                        <th class="px-4 py-2 border-b">Note</th>
+                        <th class="px-4 py-2 border-b">Stato</th>
+                        <th class="px-4 py-2 border-b">Azioni</th>
+                    </tr>
+                    <tr v-else>
+                        <th class="px-4 py-2 border-b">Utente</th>
+                        <th class="px-4 py-2 border-b">Nome articolo</th>
+                        <th class="px-4 py-2 border-b">Periodo</th>
+                        <th class="px-4 py-2 border-b">Note</th>
+                        <th class="px-4 py-2 border-b">Stato</th>
+                        <th class="px-4 py-2 border-b">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-if="filtro === 'normali'">
+                        <tr v-for="req in requests_inventario" :key="req.id">
+                            <td class="px-4 py-2 border-b">{{ req.user?.name }}</td>
+                            <td class="px-4 py-2 border-b">{{ req.item_detail?.item?.name }}</td>
+                            <td class="px-4 py-2 border-b">{{ req.item_detail?.seriale }}</td>
+                            <td class="px-4 py-2 border-b">{{ req.data_inizio }} - {{ req.data_fine }}</td>
+                            <td class="px-4 py-2 border-b">{{ req.note }}</td>
+                            <td class="px-4 py-2 border-b"><span :class="statusClass(req.stato)">{{ req.stato }}</span></td>
+                            <td class="px-4 py-2 border-b">
+                                <button v-if="req.stato === 'in_attesa'" @click="confirm(req.id)" class="bg-green-600 text-white px-2 py-1 rounded mr-2">Conferma</button>
+                                <button v-if="req.stato === 'in_attesa'" @click="cancel(req.id)" class="bg-red-600 text-white px-2 py-1 rounded">Annulla</button>
+                            </td>
+                        </tr>
+                    </template>
+                    <template v-else>
+                        <tr v-for="req in requests_acquisto" :key="req.id">
+                            <td class="px-4 py-2 border-b">{{ req.user?.name }}</td>
+                            <td class="px-4 py-2 border-b">{{ req.nome_articolo }}</td>
+                            <td class="px-4 py-2 border-b">{{ req.data_inizio }} - {{ req.data_fine }}</td>
+                            <td class="px-4 py-2 border-b">{{ req.note }}</td>
+                            <td class="px-4 py-2 border-b"><span :class="statusClass(req.stato)">{{ req.stato }}</span></td>
+                            <td class="px-4 py-2 border-b">
+                                <button v-if="req.stato === 'in_attesa'" @click="confirm(req.id)" class="bg-green-600 text-white px-2 py-1 rounded mr-2">Conferma</button>
+                                <button v-if="req.stato === 'in_attesa'" @click="cancel(req.id)" class="bg-red-600 text-white px-2 py-1 rounded">Annulla</button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
             </table>
         </main>
     </div>
@@ -68,6 +93,7 @@
 
 <script setup>
 import { ref } from 'vue';
+const filtro = ref('normali');
 import { router, Link } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 
@@ -76,8 +102,9 @@ function logout() {
     logoutForm.post('/logout');
 }
 const props = defineProps({
-  requests: Array,
-  filters: Object,
+    requests_inventario: Array,
+    requests_acquisto: Array,
+    filters: Object,
 });
 
 const selectedStato = ref(props.filters?.stato || '');

@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/items/{item}', [UserInventoryController::class, 'show'])->name('user.items.show');
     Route::get('/user/requests', [\App\Http\Controllers\UserRequestController::class, 'index'])->name('user.requests.index');
     Route::post('/user/requests', [\App\Http\Controllers\UserRequestController::class, 'store'])->name('user.requests.store');
+    Route::post('/user/requests/acquisto', [\App\Http\Controllers\UserRequestController::class, 'storeAcquisto'])->name('user.requests.storeAcquisto');
 });
 
 require __DIR__.'/auth.php';

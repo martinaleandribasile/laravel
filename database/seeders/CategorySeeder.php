@@ -18,6 +18,10 @@ class CategorySeeder extends Seeder
             ['name' => 'Cuffie', 'description' => 'Cuffie e auricolari'],
             ['name' => 'Webcam', 'description' => 'Webcam HD e FullHD'],
             ['name' => 'Visore', 'description' => 'Visori VR e AR'],
+            ['name' => 'Sedia', 'description' => 'Sedie per scrivanie, lavoro, ufficio'],
+            ['name' => 'Tablet', 'description' => 'Tablet andrioi, tablet ios'],
+            ['name' => 'Archiviazione/Salvataggio', 'description' => 'Chiavette, hardware esterni, dischi di archiviazione'],
+            ['name' => 'Stampanti', 'description' => 'Laser, Inchiostro'],
         ];
         foreach ($categories as $cat) {
             Category::create($cat);

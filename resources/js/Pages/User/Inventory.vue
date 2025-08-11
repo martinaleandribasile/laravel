@@ -25,6 +25,42 @@
         </aside>
         <main class="main-content">
             <h1 class="text-2xl font-bold mb-6">Inventario</h1>
+            <button @click="showAcquistoModal = true" class="mb-4 bg-green-600 text-white px-4 py-2 rounded">Richiedi articolo non presente</button>
+            <!-- Modal richiesta acquisto -->
+            <div v-if="showAcquistoModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                    <h2 class="text-xl font-semibold mb-4">Richiesta acquisto articolo</h2>
+                    <form @submit.prevent="submitAcquisto">
+                        <div class="mb-3">
+                            <label class="block mb-1">Nome articolo</label>
+                            <input v-model="acquistoForm.nome_articolo" required class="border rounded px-3 py-2 w-full" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="block mb-1">Categoria</label>
+                            <select v-model="acquistoForm.category_id" required class="border rounded px-3 py-2 w-full">
+                                <option value="">Seleziona categoria</option>
+                                <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="block mb-1">Data inizio</label>
+                            <input type="date" v-model="acquistoForm.data_inizio" required class="border rounded px-3 py-2 w-full" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="block mb-1">Data fine</label>
+                            <input type="date" v-model="acquistoForm.data_fine" required class="border rounded px-3 py-2 w-full" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="block mb-1">Note</label>
+                            <textarea v-model="acquistoForm.note" class="border rounded px-3 py-2 w-full"></textarea>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button @click="showAcquistoModal = false" type="button" class="px-4 py-2 rounded border">Annulla</button>
+                            <button type="submit" class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700">Invia richiesta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="flex flex-wrap gap-4 mb-6">
                 <input v-model="filters.search" @input="applyFilters" type="text" placeholder="Cerca per nome..." class="border rounded px-3 py-2" />
                 <select v-model="filters.category_id" @change="applyFilters" class="border rounded select-category">
@@ -70,6 +106,23 @@
 </template>
 
 <script setup>
+const showAcquistoModal = ref(false);
+const acquistoForm = ref({
+    nome_articolo: '',
+    category_id: '',
+    data_inizio: '',
+    data_fine: '',
+    note: ''
+});
+
+function submitAcquisto() {
+    router.post(route('user.requests.storeAcquisto'), acquistoForm.value, {
+        onSuccess: () => {
+            showAcquistoModal.value = false;
+            acquistoForm.value = { nome_articolo: '', category_id: '', data_inizio: '', data_fine: '', note: '' };
+        }
+    });
+}
 import { ref } from 'vue';
 import { router, usePage, Link } from '@inertiajs/vue3';
 

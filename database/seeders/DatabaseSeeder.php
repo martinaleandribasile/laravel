@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             ItemDetailSeeder::class,
             VisoriHDSeeder::class,
+            RequestSeeder::class,
+            ItemDetailUsageSeeder::class,
         ]);
     }
 }

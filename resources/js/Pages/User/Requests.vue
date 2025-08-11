@@ -25,25 +25,34 @@
         </aside>
         <main class="main-content">
             <h1 class="text-2xl font-bold mb-6">Le mie richieste</h1>
+            <div class="mb-4">
+                <button :class="['px-4 py-2 rounded-l', filtro === 'normali' ? 'bg-blue-600 text-white' : 'bg-gray-200']" @click="filtro = 'normali'">Richieste inventario</button>
+                <button :class="['px-4 py-2 rounded-r', filtro === 'acquisto' ? 'bg-blue-600 text-white' : 'bg-gray-200']" @click="filtro = 'acquisto'">Richieste acquisto</button>
+            </div>
             <table class="min-w-full bg-white border rounded shadow">
             <thead>
                 <tr>
+                <th class="px-4 py-2 border-b">Tipo</th>
+                <th class="px-4 py-2 border-b">Articolo / Nome</th>
                 <th class="px-4 py-2 border-b">Serial</th>
-                <th class="px-4 py-2 border-b">Articolo</th>
                 <th class="px-4 py-2 border-b">Periodo</th>
                 <th class="px-4 py-2 border-b">Note</th>
                 <th class="px-4 py-2 border-b">Stato</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="req in requests" :key="req.id">
-                <td class="px-4 py-2 border-b">{{ req.item_detail?.seriale }}</td>
-                <td class="px-4 py-2 border-b">{{ req.item_detail?.item?.name }}</td>
-                <td class="px-4 py-2 border-b">{{ req.data_inizio }} - {{ req.data_fine }}</td>
-                <td class="px-4 py-2 border-b">{{ req.note }}</td>
-                <td class="px-4 py-2 border-b">
-                    <span :class="statusClass(req.stato)">{{ req.stato }}</span>
-                </td>
+                <tr v-for="req in filteredRequests" :key="req.id">
+                    <td class="px-4 py-2 border-b">{{ req.tipo === 'acquisto' ? 'Acquisto' : 'Inventario' }}</td>
+                    <td class="px-4 py-2 border-b">
+                        <span v-if="req.tipo === 'acquisto'">{{ req.nome_articolo }}</span>
+                        <span v-else>{{ req.item_detail?.item?.name }}</span>
+                    </td>
+                    <td class="px-4 py-2 border-b">{{ req.tipo === 'acquisto' ? '-' : req.item_detail?.seriale }}</td>
+                    <td class="px-4 py-2 border-b">{{ req.data_inizio }} - {{ req.data_fine }}</td>
+                    <td class="px-4 py-2 border-b">{{ req.note }}</td>
+                    <td class="px-4 py-2 border-b">
+                        <span :class="statusClass(req.stato)">{{ req.stato }}</span>
+                    </td>
                 </tr>
             </tbody>
             </table>
@@ -54,7 +63,15 @@
 
 <script setup>
 
-    import { ref } from 'vue';
+const filtro = ref('normali');
+const filteredRequests = computed(() => {
+    if (filtro.value === 'acquisto') {
+        return props.requests.filter(r => r.tipo === 'acquisto');
+    }
+    return props.requests.filter(r => r.tipo !== 'acquisto');
+});
+
+    import { ref, computed } from 'vue';
     import { router, usePage, Link } from '@inertiajs/vue3';
 
     const props = defineProps({

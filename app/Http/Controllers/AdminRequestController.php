@@ -11,13 +11,19 @@ class AdminRequestController extends Controller
 {
     public function index(HttpRequest $request)
     {
-        $query = Request::with(['user', 'itemDetail.item']);
+        $inventarioQuery = Request::with(['user', 'itemDetail.item'])
+            ->where('tipo', 'inventario');
+        $acquistoQuery = Request::with(['user', 'category'])
+            ->where('tipo', 'acquisto');
         if ($request->filled('stato')) {
-            $query->where('stato', $request->stato);
+            $inventarioQuery->where('stato', $request->stato);
+            $acquistoQuery->where('stato', $request->stato);
         }
-        $requests = $query->latest()->get();
+        $requests_inventario = $inventarioQuery->latest()->get();
+        $requests_acquisto = $acquistoQuery->latest()->get();
         return Inertia::render('Admin/Requests', [
-            'requests' => $requests,
+            'requests_inventario' => $requests_inventario,
+            'requests_acquisto' => $requests_acquisto,
             'filters' => $request->only(['stato'])
         ]);
     }
@@ -27,8 +33,31 @@ class AdminRequestController extends Controller
         if ($user_request->stato !== 'in_attesa') {
             return back()->withErrors(['msg' => 'Richiesta già gestita.']);
         }
-        $user_request->update(['stato' => 'confermata']);
-        $user_request->itemDetail->update(['stato' => 'in_uso']);
+        if ($user_request->tipo === 'acquisto') {
+            // Crea nuovo item e dettaglio pezzo
+            $item = \App\Models\Item::create([
+                'name' => $user_request->nome_articolo,
+                'description' => 'Creato da richiesta acquisto',
+                'category_id' => $user_request->category_id,
+            ]);
+            $itemDetail = \App\Models\ItemDetail::create([
+                'item_id' => $item->id,
+                'seriale' => 'AUTO-' . strtoupper(uniqid()),
+                'colore' => 'nero',
+                'ram' => null,
+                'altro' => null,
+                'stato' => 'in_uso',
+                'data_inizio_uso' => now()->toDateString(),
+                'data_fine_uso' => null,
+            ]);
+            $user_request->item_detail_id = $itemDetail->id;
+            $user_request->update(['stato' => 'confermata', 'item_detail_id' => $itemDetail->id]);
+        } else {
+            $user_request->update(['stato' => 'confermata']);
+            if ($user_request->itemDetail) {
+                $user_request->itemDetail->update(['stato' => 'in_uso']);
+            }
+        }
         return back()->with('success', 'Richiesta confermata!');
     }
 
@@ -38,7 +67,9 @@ class AdminRequestController extends Controller
             return back()->withErrors(['msg' => 'Richiesta già gestita.']);
         }
         $user_request->update(['stato' => 'annullata']);
-        $user_request->itemDetail->update(['stato' => 'disponibile']);
+        if ($user_request->tipo === 'inventario' && $user_request->itemDetail) {
+            $user_request->itemDetail->update(['stato' => 'disponibile']);
+        }
         return back()->with('success', 'Richiesta annullata!');
     }
 }

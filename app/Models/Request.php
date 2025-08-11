@@ -24,6 +24,9 @@ class Request extends Model
         'data_fine',
         'note',
         'stato',
+        'tipo',
+        'nome_articolo',
+        'category_id',
     ];
 
     public function user() {
@@ -31,5 +34,8 @@ class Request extends Model
     }
     public function itemDetail() {
         return $this->belongsTo(ItemDetail::class);
+    }
+    public function category() {
+        return $this->belongsTo(Category::class);
     }
 }
