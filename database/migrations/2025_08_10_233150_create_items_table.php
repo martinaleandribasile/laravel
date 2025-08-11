@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['available', 'unavailable', 'maintenance'])->default('available');
-            $table->integer('quantity')->default(1);
+            // Rimosso status e quantity: ora sono gestiti dai dettagli pezzi
             $table->timestamps();
         });
     }

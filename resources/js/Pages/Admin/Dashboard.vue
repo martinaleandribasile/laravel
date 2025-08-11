@@ -14,7 +14,7 @@
       </div>
     </nav>
     <aside class="sidebar">
-      <h2>{{ userName }}</h2>
+      <h3 class="sidebar-title"> Benvenuto: {{ userName }}</h3>
       <nav>
         <ul>
           <li><Link href="/admin/items">Inventario</Link></li>

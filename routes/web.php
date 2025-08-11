@@ -3,6 +3,7 @@
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserInventoryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,12 +36,17 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('items', ItemController::class);
         Route::resource('categories', CategoryController::class);
+        Route::post('items/{item}/details', [\App\Http\Controllers\ItemDetailController::class, 'store'])->name('items.details.store');
     });
 
     // Dashboard user
     Route::get('/user/dashboard', function () {
         return Inertia::render('User/Dashboard');
     })->name('user.dashboard');
+
+    Route::get('/user/inventory', [UserInventoryController::class, 'index'])
+        ->name('user.inventory');
+    Route::get('/user/items/{item}', [UserInventoryController::class, 'show'])->name('user.items.show');
 });
 
 require __DIR__.'/auth.php';

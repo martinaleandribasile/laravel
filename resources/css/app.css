@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Base element */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+h1{
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    color: #222e3c;
+}
+
 /* Layout principale */
 .admin-dashboard {
   display: flex;
@@ -112,10 +127,9 @@
   min-height: 100vh;
   margin-top: 64px;
 }
-.sidebar h2 {
+.sidebar-title {
   margin-bottom: 2rem;
-  font-size: 1.5rem;
-  letter-spacing: 1px;
+  font-size: 1.0rem;
 }
 .sidebar ul {
   list-style: none;
@@ -139,4 +153,29 @@
   flex: 1;
   padding: 2rem 3rem;
   margin-top: 64px;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.header-row-end {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin-bottom: 2rem;
+}
+
+.add-btn {
+    background: #4fd1c5;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px;
+}
+.add-btn:hover {
+    background: #38b2ac;
 }

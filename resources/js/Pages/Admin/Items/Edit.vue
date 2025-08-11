@@ -18,14 +18,6 @@
         </select>
       </div>
       <div class="form-group">
-        <label>Stato</label>
-        <select v-model="form.status" required>
-          <option value="available">Disponibile</option>
-          <option value="unavailable">Non disponibile</option>
-          <option value="maintenance">In manutenzione</option>
-        </select>
-      </div>
-      <div class="form-group">
         <label>Quantità</label>
         <input v-model.number="form.quantity" type="number" min="0" required />
       </div>

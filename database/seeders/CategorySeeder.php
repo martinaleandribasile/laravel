@@ -17,6 +17,7 @@ class CategorySeeder extends Seeder
             ['name' => 'Mouse', 'description' => 'Mouse ottici e wireless'],
             ['name' => 'Cuffie', 'description' => 'Cuffie e auricolari'],
             ['name' => 'Webcam', 'description' => 'Webcam HD e FullHD'],
+            ['name' => 'Visore', 'description' => 'Visori VR e AR'],
         ];
         foreach ($categories as $cat) {
             Category::create($cat);

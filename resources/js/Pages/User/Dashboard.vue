@@ -19,9 +19,10 @@
       <h2>Utente</h2>
       <nav>
         <ul>
-          <li><a href="#richieste">Le mie richieste</a></li>
-          <li><a href="#storico">Storico</a></li>
-          <li><a href="#profilo">Profilo</a></li>
+            <li><Link :href="route('user.inventory')">Inventario</Link></li>
+            <li><a href="#richieste">Le mie richieste</a></li>
+            <li><a href="#storico">Storico</a></li>
+            <li><a href="#profilo">Profilo</a></li>
         </ul>
       </nav>
     </aside>
@@ -35,7 +36,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { usePage, useForm } from '@inertiajs/vue3';
+import { usePage, useForm, Link } from '@inertiajs/vue3';
 
 const page = usePage();
 const userName = computed(() => page.props.auth?.user?.name || '');

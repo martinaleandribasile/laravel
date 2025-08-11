@@ -28,6 +28,8 @@
         <div class="items-index">
           <div class="header-row">
             <h1>Gestione Articoli</h1>
+          </div>
+          <div class="header-row-end">
             <Link href="/admin/items/create" class="add-btn">+ Nuovo Articolo</Link>
           </div>
           <table class="items-table">
@@ -35,8 +37,11 @@
               <tr>
                 <th>Nome</th>
                 <th>Categoria</th>
-                <th>Stato</th>
                 <th>Quantità</th>
+                <th>Disponibili</th>
+                <th>In uso</th>
+                <th>In attesa</th>
+                <th>Status</th>
                 <th>Dettaglio</th>
                 <th>Modifica</th>
                 <th>Elimina</th>
@@ -46,10 +51,14 @@
               <tr v-for="item in items" :key="item.id">
                 <td>{{ item.name }}</td>
                 <td>{{ item.category?.name }}</td>
-                <td>
-                  <span :class="'status ' + item.status">{{ item.status }}</span>
-                </td>
                 <td>{{ item.quantity }}</td>
+                <td>{{ item.disponibili }}</td>
+                <td>{{ item.in_uso }}</td>
+                <td>{{ item.in_attesa }}</td>
+                <td>
+                  <span v-if="item.disponibili > 0" class="status available">Richiedibile</span>
+                  <span v-else class="status unavailable" style="color:#e53e3e">Non richiedibile</span>
+                </td>
                 <td>
                   <Link :href="`/admin/items/${item.id}`" class="action-btn" title="Dettaglio">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="#4fd1c5" stroke-width="2" d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/></svg>
@@ -130,7 +139,6 @@ function closeEditModal() {
 }
 
 function submitEdit() {
-  // Qui puoi inviare i dati aggiornati tramite Inertia
   router.put(`/admin/items/${editItem.id}`, {
     name: editItem.name,
     category_id: editItem.category.id,
@@ -150,29 +158,13 @@ function deleteItem(id) {
 
 <style scoped>
 .items-index {
-  max-width: 1100px;
   margin: 2rem auto;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   padding: 2rem 2.5rem;
 }
-.header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-}
-.add-btn {
-    background: #4fd1c5;
-    color: #fff;
-    font-weight: 600;
-    border-radius: 8px;
-    padding: 10px;
-}
-.add-btn:hover {
-    background: #38b2ac;
-}
+
 .items-table {
     width: 100%;
     border-collapse: collapse;

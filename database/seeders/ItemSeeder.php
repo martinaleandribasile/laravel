@@ -14,11 +14,11 @@ class ItemSeeder extends Seeder
     {
         $categories = Category::all();
         $items = [
-            ['name' => 'Monitor LG 27"', 'description' => 'Monitor IPS FullHD', 'status' => 'available', 'quantity' => 5, 'category' => 'Monitor'],
-            ['name' => 'Tastiera Logitech K120', 'description' => 'Tastiera cablata', 'status' => 'available', 'quantity' => 10, 'category' => 'Tastiere'],
-            ['name' => 'Mouse Logitech M185', 'description' => 'Mouse wireless', 'status' => 'available', 'quantity' => 8, 'category' => 'Mouse'],
-            ['name' => 'Cuffie Sony WH-CH510', 'description' => 'Cuffie wireless', 'status' => 'unavailable', 'quantity' => 2, 'category' => 'Cuffie'],
-            ['name' => 'Webcam Logitech C920', 'description' => 'Webcam FullHD', 'status' => 'available', 'quantity' => 3, 'category' => 'Webcam'],
+            ['name' => 'Monitor LG 27"', 'description' => 'Monitor IPS FullHD', 'category' => 'Monitor'],
+            ['name' => 'Tastiera Logitech K120', 'description' => 'Tastiera cablata', 'category' => 'Tastiere'],
+            ['name' => 'Mouse Logitech M185', 'description' => 'Mouse wireless', 'category' => 'Mouse'],
+            ['name' => 'Cuffie Sony WH-CH510', 'description' => 'Cuffie wireless', 'category' => 'Cuffie'],
+            ['name' => 'Webcam Logitech C920', 'description' => 'Webcam FullHD', 'category' => 'Webcam'],
         ];
         foreach ($items as $item) {
             $cat = $categories->firstWhere('name', $item['category']);
@@ -27,8 +27,6 @@ class ItemSeeder extends Seeder
                     'name' => $item['name'],
                     'description' => $item['description'],
                     'category_id' => $cat->id,
-                    'status' => $item['status'],
-                    'quantity' => $item['quantity'],
                 ]);
             }
         }

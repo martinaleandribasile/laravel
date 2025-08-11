@@ -14,7 +14,20 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::with('category')->orderBy('created_at', 'desc')->get();
+        $items = Item::with(['category', 'dettaglioPezzi'])->orderBy('created_at', 'desc')->get();
+        $items = $items->map(function($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'description' => $item->description,
+                'category' => $item->category,
+                'quantity' => $item->dettaglioPezzi->count(),
+                'disponibili' => $item->disponibili,
+                'in_uso' => $item->in_uso,
+                'in_attesa' => $item->in_attesa,
+                'dettaglio_pezzi' => $item->dettaglioPezzi,
+            ];
+        });
         return Inertia::render('Admin/Items/Index', [
             'items' => $items,
         ]);
@@ -40,7 +53,6 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'status' => 'required|in:available,unavailable,maintenance',
             'quantity' => 'required|integer|min:0',
         ]);
         Item::create($data);
@@ -52,9 +64,13 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        $item->load('category');
+        $item->load(['category', 'dettaglioPezzi']);
         return Inertia::render('Admin/Items/Show', [
             'item' => $item,
+            'dettaglio_pezzi' => $item->dettaglioPezzi,
+            'disponibili' => $item->disponibili,
+            'in_uso' => $item->in_uso,
+            'in_attesa' => $item->in_attesa,
         ]);
     }
 
@@ -75,11 +91,10 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-       $data = $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'status' => 'required|in:available,unavailable,maintenance',
             'quantity' => 'required|integer|min:0',
         ]);
         $item->update($data);
