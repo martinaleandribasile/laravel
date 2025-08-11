@@ -68,16 +68,22 @@
 import { useForm, Link } from '@inertiajs/vue3';
 import { defineProps } from 'vue';
 
-import { useForm } from '@inertiajs/vue3';
+// Inertia: useForm e Link sono forniti da Inertia.js per la gestione dei form e dei link SPA
 const logoutForm = useForm({});
+
+/**
+ * Esegue il logout dell'utente tramite una richiesta POST usando Inertia.js
+ */
 function logout() {
   logoutForm.post('/logout');
 }
 
+// Props: lista delle categorie disponibili
 const props = defineProps({
   categories: Array,
 });
 
+// Inertia: useForm gestisce lo stato del form e l'invio dei dati
 const form = useForm({
   name: '',
   description: '',
@@ -86,6 +92,10 @@ const form = useForm({
   quantity: 1,
 });
 
+/**
+ * Invia il form per creare un nuovo articolo.
+ * Usa Inertia.js per la richiesta POST e gestisce il reset/errori del form.
+ */
 function submit() {
   form.post('/admin/items', {
     onSuccess: () => {

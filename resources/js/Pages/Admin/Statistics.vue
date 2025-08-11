@@ -150,9 +150,19 @@ const barTopProductOptions = {
   }
 };
 
+
+// Inertia: usePage e useForm sono forniti da Inertia.js per accedere ai dati utente e gestire i form
 const page = usePage();
+
+// Restituisce il nome dell'utente autenticato
 const userName = computed(() => page.props.auth?.user?.name || '');
+
+// Inertia: useForm gestisce lo stato del form di logout
 const logoutForm = useForm({});
+
+/**
+ * Esegue il logout dell'utente tramite una richiesta POST usando Inertia.js
+ */
 function logout() {
   logoutForm.post('/logout');
 }

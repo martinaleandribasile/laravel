@@ -10,6 +10,7 @@ use Inertia\Inertia;
 
 class UserRequestController extends Controller
 {
+    // Salva una nuova richiesta di utilizzo per un item_detail
     public function store(HttpRequest $request)
     {
         $request->validate([
@@ -55,6 +56,7 @@ class UserRequestController extends Controller
         return redirect()->route('user.requests.index')->with('success', 'Richiesta inviata!');
     }
 
+    // Mostra tutte le richieste dell'utente autenticato
     public function index()
     {
         $requests = Request::with(['itemDetail.item', 'itemDetail'])->where('user_id', Auth::id())->latest()->get();

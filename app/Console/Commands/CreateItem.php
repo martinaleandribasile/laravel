@@ -1,14 +1,15 @@
 <?php
-
 namespace App\Console\Commands;
+
+// Questo comando artisan permette di creare un nuovo articolo (item) in magazzino da terminale, specificando nome, categoria e descrizione.
+// Esempio:
+// php artisan items:create --name="Monitor LED" --category="Monitor" --description="Monitor 27 pollici"
 
 use Illuminate\Console\Command;
 use App\Models\Item;
 use App\Models\Category;
 
 class CreateItem extends Command
-// Esempio di comando da terminale:
-// php artisan items:create --name="Monitor LED" --category="Monitor" --description="Monitor 27 pollici"
 {
     protected $signature = 'items:create {--name=} {--category=} {--description=}';
     protected $description = 'Crea un nuovo item (articolo) in magazzino';

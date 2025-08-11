@@ -1,5 +1,5 @@
 <?php
-
+// Factory per generare dati fittizi di categorie (Category) per i test e i seed del database.
 namespace Database\Factories;
 
 use App\Models\Category;

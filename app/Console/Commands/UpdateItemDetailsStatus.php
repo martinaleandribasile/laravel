@@ -7,9 +7,15 @@ use App\Models\ItemDetail;
 use App\Models\ItemDetailUsage;
 use Carbon\Carbon;
 
+/**
+ * Comando artisan per aggiornare lo stato dei pezzi (ItemDetail) in base agli utilizzi e alle richieste.
+ * Imposta lo stato a 'in_uso' se il pezzo è attualmente utilizzato, 'in_attesa' se ci sono richieste in attesa,
+ * altrimenti 'disponibile'.
+ *
+ * Esempio di comando da terminale:
+ * php artisan items:update-status
+ */
 class UpdateItemDetailsStatus extends Command
-// Esempio di comando da terminale:
-// php artisan items:update-status
 {
     protected $signature = 'items:update-status';
     protected $description = 'Aggiorna lo stato dei pezzi in base alle date di utilizzo e richieste';

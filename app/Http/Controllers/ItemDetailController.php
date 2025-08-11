@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 class ItemDetailController extends Controller
 {
+    // Restituisce lo storico degli utilizzi di un dettaglio pezzo (item_detail)
     public function storico($id)
     {
         $detail = ItemDetail::with(['usages.user'])->findOrFail($id);
@@ -16,6 +17,7 @@ class ItemDetailController extends Controller
             'storico' => $detail->usages
         ]);
     }
+    // Salva un nuovo dettaglio pezzo per un articolo
     public function store(Request $request, Item $item)
     {
         $data = $request->validate([

@@ -95,11 +95,18 @@ const props = defineProps({
 });
 
 import { useForm } from '@inertiajs/vue3';
+
+// Inertia: useForm gestisce lo stato del form di logout
 const logoutForm = useForm({});
+
+/**
+ * Esegue il logout dell'utente tramite una richiesta POST usando Inertia.js
+ */
 function logout() {
     logoutForm.post('/logout');
 }
 
+// Stato per la modale richiesta pezzo
 const showModal = ref(false);
 const selectedDetail = ref(null);
 const form = ref({
@@ -108,12 +115,20 @@ const form = ref({
     note: '',
 });
 
+/**
+ * Apre la modale per richiedere un dettaglio pezzo
+ * @param {Object} detail - Il dettaglio selezionato
+ */
 function requestDetail(detail) {
     selectedDetail.value = detail;
     form.value = { data_inizio: '', data_fine: '', note: '' };
     showModal.value = true;
 }
 
+/**
+ * Invia la richiesta pezzo tramite Inertia.js (router.post)
+ * Al successo chiude la modale
+ */
 function confirmRequest() {
     router.post(route('user.requests.store'), {
         item_detail_id: selectedDetail.value.id,
@@ -127,6 +142,10 @@ function confirmRequest() {
     });
 }
 
+/**
+ * Restituisce la classe CSS per lo stato del dettaglio pezzo
+ * @param {String} stato - Stato del pezzo
+ */
 function statusClass(stato) {
   if (stato === 'disponibile') return 'text-green-600 font-bold';
   if (stato === 'in_uso') return 'text-red-600 font-bold';

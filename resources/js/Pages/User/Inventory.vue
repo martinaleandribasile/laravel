@@ -106,60 +106,87 @@
 </template>
 
 <script setup>
-const showAcquistoModal = ref(false);
-const acquistoForm = ref({
-    nome_articolo: '',
-    category_id: '',
-    data_inizio: '',
-    data_fine: '',
-    note: ''
-});
-
-function submitAcquisto() {
-    router.post(route('user.requests.storeAcquisto'), acquistoForm.value, {
-        onSuccess: () => {
-            showAcquistoModal.value = false;
-            acquistoForm.value = { nome_articolo: '', category_id: '', data_inizio: '', data_fine: '', note: '' };
-        }
-    });
-}
 import { ref } from 'vue';
-import { router, usePage, Link } from '@inertiajs/vue3';
+import { router, usePage, Link, useForm } from '@inertiajs/vue3';
 
+// Stato per la modale richiesta acquisto
+const showAcquistoModal = ref(false);
+
+// Form per la richiesta acquisto articolo
+const acquistoForm = ref({
+        nome_articolo: '',
+        category_id: '',
+        data_inizio: '',
+        data_fine: '',
+        note: ''
+});
+
+/**
+ * Invia la richiesta di acquisto articolo tramite Inertia.js (router.post)
+ * Al successo chiude la modale e resetta il form
+ */
+function submitAcquisto() {
+        router.post(route('user.requests.storeAcquisto'), acquistoForm.value, {
+                onSuccess: () => {
+                        showAcquistoModal.value = false;
+                        acquistoForm.value = { nome_articolo: '', category_id: '', data_inizio: '', data_fine: '', note: '' };
+                }
+        });
+}
+
+// Props: lista articoli, categorie e filtri attivi
 const props = defineProps({
-  items: Array,
-  categories: Array,
-  filters: Object,
+    items: Array,
+    categories: Array,
+    filters: Object,
 });
 
-import { useForm } from '@inertiajs/vue3';
+// Inertia: useForm gestisce lo stato del form di logout
 const logoutForm = useForm({});
+
+/**
+ * Esegue il logout dell'utente tramite una richiesta POST usando Inertia.js
+ */
 function logout() {
-    logoutForm.post('/logout');
+        logoutForm.post('/logout');
 }
 
+// Stato dei filtri di ricerca
 const filters = ref({
-  search: props.filters?.search || '',
-  category_id: props.filters?.category_id || '',
+    search: props.filters?.search || '',
+    category_id: props.filters?.category_id || '',
 });
 
+/**
+ * Applica i filtri di ricerca tramite Inertia.js (router.get)
+ * Aggiorna la pagina mantenendo lo stato
+ */
 function applyFilters() {
-  router.get(route('user.inventory'), filters.value, { preserveState: true, replace: true });
+    router.get(route('user.inventory'), filters.value, { preserveState: true, replace: true });
 }
 
+// Stato per la modale richiesta pezzo
 const showModal = ref(false);
 const selectedItem = ref(null);
 
+/**
+ * Apre la modale per richiedere un pezzo
+ * @param {Object} item - L'articolo selezionato
+ */
 function requestItem(item) {
-  selectedItem.value = item;
-  showModal.value = true;
+    selectedItem.value = item;
+    showModal.value = true;
 }
 
+/**
+ * Conferma la richiesta pezzo (qui va la chiamata POST con Inertia.js)
+ * Attualmente mostra solo un alert e chiude la modale
+ */
 function confirmRequest() {
-  // Qui andrà la chiamata POST per la richiesta
-  // router.post(route('user.requests.store'), { item_id: selectedItem.value.id })
-  alert('Richiesta inviata per ' + selectedItem.value.name);
-  showModal.value = false;
+    // Qui andrà la chiamata POST per la richiesta
+    // router.post(route('user.requests.store'), { item_id: selectedItem.value.id })
+    alert('Richiesta inviata per ' + selectedItem.value.name);
+    showModal.value = false;
 }
 </script>
 

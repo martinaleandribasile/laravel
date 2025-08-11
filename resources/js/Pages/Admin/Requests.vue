@@ -95,18 +95,30 @@ const filtro = ref('normali');
 import { router, Link } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 
+// Inertia: useForm, Link e router sono forniti da Inertia.js per la gestione dei form, link e richieste SPA
 const logoutForm = useForm({});
+
+/**
+ * Esegue il logout dell'utente tramite una richiesta POST usando Inertia.js
+ */
 function logout() {
     logoutForm.post('/logout');
 }
+
+// Props: richieste inventario e acquisto, filtri attivi
 const props = defineProps({
     requests_inventario: Array,
     requests_acquisto: Array,
     filters: Object,
 });
 
+// Stato per il filtro selezionato
 const selectedStato = ref(props.filters?.stato || '');
 
+/**
+ * Restituisce la classe CSS per lo stato della richiesta
+ * @param {String} stato - Stato della richiesta
+ */
 function statusClass(stato) {
     if (stato === 'confermata') return 'text-green-600 font-bold';
     if (stato === 'annullata') return 'text-red-600 font-bold';
@@ -114,13 +126,26 @@ function statusClass(stato) {
     return 'text-gray-500';
 }
 
+/**
+ * Applica il filtro stato tramite Inertia.js (router.get)
+ * Aggiorna la pagina mantenendo lo stato
+ */
 function filter() {
     router.get(route('admin.requests.index'), { stato: selectedStato.value }, { preserveState: true, replace: true });
 }
 
+/**
+ * Conferma una richiesta tramite Inertia.js (router.post)
+ * @param {Number} id - L'id della richiesta da confermare
+ */
 function confirm(id) {
     router.post(route('admin.requests.confirm', id));
 }
+
+/**
+ * Annulla una richiesta tramite Inertia.js (router.post)
+ * @param {Number} id - L'id della richiesta da annullare
+ */
 function cancel(id) {
     router.post(route('admin.requests.cancel', id));
 }

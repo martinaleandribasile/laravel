@@ -111,18 +111,30 @@
 <script setup>
 import { Link, router, useForm } from '@inertiajs/vue3';
 import { defineProps, ref, reactive } from 'vue';
+
+// Inertia: useForm e Link sono forniti da Inertia.js per la gestione dei form e dei link SPA
 const logoutForm = useForm({});
+
+/**
+ * Esegue il logout dell'utente tramite una richiesta POST usando Inertia.js
+ */
 function logout() {
   logoutForm.post('/logout');
 }
 
+// Props: lista degli articoli da visualizzare
 const props = defineProps({
   items: Array,
 });
 
+// Stato per la modale di modifica
 const showEditModal = ref(false);
 const editItem = reactive({ id: null, name: '', category: { name: '' }, status: '', quantity: 0 });
 
+/**
+ * Apre la modale di modifica e popola i dati dell'articolo selezionato
+ * @param {Object} item - L'articolo da modificare
+ */
 function openEditModal(item) {
   editItem.id = item.id;
   editItem.name = item.name;
@@ -132,10 +144,17 @@ function openEditModal(item) {
   showEditModal.value = true;
 }
 
+/**
+ * Chiude la modale di modifica
+ */
 function closeEditModal() {
   showEditModal.value = false;
 }
 
+/**
+ * Invia la richiesta di modifica articolo tramite Inertia.js (router.put)
+ * Aggiorna i dati lato server e chiude la modale al successo
+ */
 function submitEdit() {
   router.put(`/admin/items/${editItem.id}`, {
     name: editItem.name,
@@ -147,6 +166,10 @@ function submitEdit() {
   });
 }
 
+/**
+ * Elimina un articolo tramite Inertia.js (router.delete) dopo conferma utente
+ * @param {Number} id - L'id dell'articolo da eliminare
+ */
 function deleteItem(id) {
   if (confirm('Sei sicuro di voler eliminare questo articolo?')) {
     router.delete(`/admin/items/${id}`);

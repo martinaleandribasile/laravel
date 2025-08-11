@@ -1,5 +1,5 @@
 <?php
-
+// Factory per generare dati fittizi di utenti (User) per i test e i seed del database.
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;

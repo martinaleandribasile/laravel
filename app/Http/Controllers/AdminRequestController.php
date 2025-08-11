@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 class AdminRequestController extends Controller
 {
+    // Mostra tutte le richieste di inventario e acquisto, con eventuale filtro per stato
     public function index(HttpRequest $request)
     {
         $inventarioQuery = Request::with(['user', 'itemDetail.item'])
@@ -28,6 +29,7 @@ class AdminRequestController extends Controller
         ]);
     }
 
+    // Conferma una richiesta (acquisto o inventario) e aggiorna lo stato
     public function confirm(\App\Models\Request $user_request)
     {
         if ($user_request->stato !== 'in_attesa') {
@@ -61,6 +63,7 @@ class AdminRequestController extends Controller
         return back()->with('success', 'Richiesta confermata!');
     }
 
+    // Annulla una richiesta e aggiorna lo stato
     public function cancel(\App\Models\Request $user_request)
     {
         if ($user_request->stato !== 'in_attesa') {

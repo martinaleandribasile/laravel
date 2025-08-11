@@ -63,7 +63,18 @@
 
 <script setup>
 
+import { ref, computed } from 'vue';
+import { router, usePage, Link, useForm } from '@inertiajs/vue3';
+
+// Stato per il filtro richieste (normali/acquisto)
 const filtro = ref('normali');
+
+// Props: lista delle richieste dell'utente
+const props = defineProps({
+    requests: Array,
+});
+
+// Filtra le richieste in base al tipo selezionato
 const filteredRequests = computed(() => {
     if (filtro.value === 'acquisto') {
         return props.requests.filter(r => r.tipo === 'acquisto');
@@ -71,25 +82,26 @@ const filteredRequests = computed(() => {
     return props.requests.filter(r => r.tipo !== 'acquisto');
 });
 
-    import { ref, computed } from 'vue';
-    import { router, usePage, Link } from '@inertiajs/vue3';
+// Inertia: useForm gestisce lo stato del form di logout
+const logoutForm = useForm({});
 
-    const props = defineProps({
-        requests: Array,
-    });
+/**
+ * Esegue il logout dell'utente tramite una richiesta POST usando Inertia.js
+ */
+function logout() {
+    logoutForm.post('/logout');
+}
 
-    import { useForm } from '@inertiajs/vue3';
-    const logoutForm = useForm({});
-    function logout() {
-        logoutForm.post('/logout');
-    }
-
-    function statusClass(stato) {
-        if (stato === 'confermata') return 'text-green-600 font-bold';
-        if (stato === 'annullata') return 'text-red-600 font-bold';
-        if (stato === 'in_attesa') return 'text-yellow-600 font-bold';
-        return 'text-gray-500';
-    }
+/**
+ * Restituisce la classe CSS per lo stato della richiesta
+ * @param {String} stato - Stato della richiesta
+ */
+function statusClass(stato) {
+    if (stato === 'confermata') return 'text-green-600 font-bold';
+    if (stato === 'annullata') return 'text-red-600 font-bold';
+    if (stato === 'in_attesa') return 'text-yellow-600 font-bold';
+    return 'text-gray-500';
+}
 </script>
 
 <style scoped>

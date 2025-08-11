@@ -12,6 +12,7 @@ class ItemController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // Mostra la lista di tutti gli articoli con dettagli e quantità
     public function index()
     {
         $items = Item::with(['category', 'dettaglioPezzi'])->orderBy('created_at', 'desc')->get();
@@ -36,6 +37,7 @@ class ItemController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    // Mostra il form per creare un nuovo articolo
     public function create()
     {
         $categories = Category::all();
@@ -47,6 +49,7 @@ class ItemController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // Salva un nuovo articolo nel database
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -62,6 +65,7 @@ class ItemController extends Controller
     /**
      * Display the specified resource.
      */
+    // Mostra i dettagli di un articolo specifico
     public function show(Item $item)
     {
         $item->load(['category', 'dettaglioPezzi']);
@@ -77,6 +81,7 @@ class ItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    // Mostra il form per modificare un articolo
     public function edit(Item $item)
     {
          $categories = Category::all();
@@ -89,6 +94,7 @@ class ItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // Aggiorna i dati di un articolo esistente
     public function update(Request $request, Item $item)
     {
         $data = $request->validate([
@@ -104,6 +110,7 @@ class ItemController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    // Elimina un articolo dal database
     public function destroy(Item $item)
     {
         $item->delete();

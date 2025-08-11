@@ -10,6 +10,7 @@ use Inertia\Inertia;
 
 class UserInventoryController extends Controller
 {
+    // Mostra la lista degli articoli disponibili per l'utente autenticato
     public function index(Request $request)
     {
         if (Auth::user()->role !== 'user') {
@@ -32,6 +33,7 @@ class UserInventoryController extends Controller
             'filters' => $request->only(['search', 'category_id']),
         ]);
     }
+    // Mostra i dettagli di un articolo per l'utente autenticato
     public function show(Item $item)
     {
         if (Auth::user()->role !== 'user') {

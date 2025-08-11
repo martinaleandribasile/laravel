@@ -166,6 +166,8 @@
 import { Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import axios from 'axios';
+
+// Props: dati dell'articolo e dettagli pezzi
 const props = defineProps({
     item: Object,
     dettaglio_pezzi: Array,
@@ -174,12 +176,20 @@ const props = defineProps({
     in_attesa: Number,
 });
 
+// Inertia: useForm e Link sono forniti da Inertia.js per la gestione dei form e dei link SPA
 const logoutForm = useForm({});
+
+/**
+ * Esegue il logout dell'utente tramite una richiesta POST usando Inertia.js
+ */
 function logout() {
     logoutForm.post('/logout');
 }
 
+// Stato per la modale di aggiunta dettaglio pezzo
 const showAddDetail = ref(false);
+
+// Inertia: useForm gestisce lo stato del form e l'invio dei dati
 const detailForm = useForm({
     seriale: '',
     colore: '',
@@ -190,12 +200,16 @@ const detailForm = useForm({
     data_fine_uso: '',
 });
 
-// Storico pezzo
+// Stato per la modale storico pezzo
 const showStoricoModal = ref(false);
 const storicoPezzo = ref(null);
 const storicoData = ref([]);
 const storicoLoading = ref(false);
 
+/**
+ * Apre la modale dello storico per un pezzo e carica i dati tramite chiamata API
+ * @param {Object} pezzo - Il pezzo di cui mostrare lo storico
+ */
 async function openStoricoModal(pezzo) {
     showStoricoModal.value = true;
     storicoPezzo.value = pezzo;
@@ -211,6 +225,10 @@ async function openStoricoModal(pezzo) {
     }
 }
 
+/**
+ * Invia il form per aggiungere un nuovo dettaglio pezzo tramite Inertia.js (detailForm.post)
+ * Al successo resetta il form e chiude la modale
+ */
 function submitDetail() {
     detailForm.post(`/admin/items/${props.item.id}/details`, {
         onSuccess: () => {
