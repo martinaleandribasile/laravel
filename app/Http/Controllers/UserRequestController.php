@@ -22,6 +22,26 @@ class UserRequestController extends Controller
         if ($itemDetail->stato !== 'disponibile') {
             return back()->withErrors(['item_detail_id' => 'Il pezzo non è disponibile.']);
         }
+
+        // Controllo overlapping periodi
+        $overlap = \App\Models\Request::where('item_detail_id', $itemDetail->id)
+            ->where(function($q) use ($request) {
+                $q->where(function($q2) use ($request) {
+                    $q2->where('data_inizio', '<=', $request->data_fine)
+                        ->where('data_fine', '>=', $request->data_inizio);
+                });
+            })
+            ->whereIn('stato', ['in_attesa', 'confermata'])
+            ->exists();
+        if ($overlap) {
+            return back()->withErrors(['data_inizio' => 'Il pezzo è già richiesto o in uso per il periodo selezionato.']);
+        }
+
+        // Non permettere richieste per periodi antecedenti a oggi
+        if (strtotime($request->data_inizio) < strtotime(date('Y-m-d'))) {
+            return back()->withErrors(['data_inizio' => 'Non puoi richiedere per un periodo già passato.']);
+        }
+
         $req = Request::create([
             'user_id' => Auth::id(),
             'item_detail_id' => $request->item_detail_id,
@@ -30,8 +50,8 @@ class UserRequestController extends Controller
             'note' => $request->note,
             'stato' => 'in_attesa',
         ]);
-    // cambia stato item_detail
-    $itemDetail->update(['stato' => 'in_attesa']);
+        // cambia stato item_detail
+        $itemDetail->update(['stato' => 'in_attesa']);
         return redirect()->route('user.requests.index')->with('success', 'Richiesta inviata!');
     }
 

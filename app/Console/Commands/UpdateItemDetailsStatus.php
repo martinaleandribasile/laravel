@@ -8,6 +8,8 @@ use App\Models\ItemDetailUsage;
 use Carbon\Carbon;
 
 class UpdateItemDetailsStatus extends Command
+// Esempio di comando da terminale:
+// php artisan items:update-status
 {
     protected $signature = 'items:update-status';
     protected $description = 'Aggiorna lo stato dei pezzi in base alle date di utilizzo e richieste';
