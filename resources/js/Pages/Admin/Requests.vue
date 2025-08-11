@@ -20,7 +20,7 @@
                 <li><Link href="/admin/dashboard">Home</Link></li>
                 <li><Link href="/admin/items">Inventario</Link></li>
                 <li><Link :href="route('admin.requests.index')">Richieste</Link></li>
-                <li><a href="#statistiche">Statistiche</a></li>
+                <li><Link href="/admin/statistiche">Statistiche</Link></li>
             </ul>
             </nav>
         </aside>
@@ -50,7 +50,6 @@
                     <tr v-else>
                         <th class="px-4 py-2 border-b">Utente</th>
                         <th class="px-4 py-2 border-b">Nome articolo</th>
-                        <th class="px-4 py-2 border-b">Periodo</th>
                         <th class="px-4 py-2 border-b">Note</th>
                         <th class="px-4 py-2 border-b">Stato</th>
                         <th class="px-4 py-2 border-b">Azioni</th>
@@ -75,7 +74,6 @@
                         <tr v-for="req in requests_acquisto" :key="req.id">
                             <td class="px-4 py-2 border-b">{{ req.user?.name }}</td>
                             <td class="px-4 py-2 border-b">{{ req.nome_articolo }}</td>
-                            <td class="px-4 py-2 border-b">{{ req.data_inizio }} - {{ req.data_fine }}</td>
                             <td class="px-4 py-2 border-b">{{ req.note }}</td>
                             <td class="px-4 py-2 border-b"><span :class="statusClass(req.stato)">{{ req.stato }}</span></td>
                             <td class="px-4 py-2 border-b">

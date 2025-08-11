@@ -21,7 +21,7 @@
                         <li><Link href="/admin/dashboard">Home</Link></li>
                         <li><Link href="/admin/items">Inventario</Link></li>
                         <li><Link :href="route('admin.requests.index')">Richieste</Link></li>
-                        <li><Link href="#statistiche">Statistiche</Link></li>
+                        <li><Link href="/admin/statistiche">Statistiche</Link></li>
                     </ul>
                 </nav>
             </aside>

@@ -26,6 +26,7 @@ class ItemDetailUsageSeeder extends Seeder
             for ($i = 0; $i < $numUsi; $i++) {
                 $user = $users->random();
                 $data_inizio = (clone $start)->addDays(rand(1, 10));
+                $start = (clone $data_inizio)->subDays(7)->addDays(rand(0, 2));
                 $data_fine = (clone $data_inizio)->addDays(rand(2, 15));
                 $request = Request::create([
                     'user_id' => $user->id,
@@ -35,6 +36,8 @@ class ItemDetailUsageSeeder extends Seeder
                     'note' => fake()->sentence(),
                     'stato' => Arr::random(['in_attesa', 'confermata', 'annullata']),
                     'tipo' => 'inventario',
+                    'created_at' => $start,
+                    'updated_at' => $start,
                 ]);
                 $allRequests->push($request);
                 ItemDetailUsage::create([

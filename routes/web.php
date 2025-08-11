@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::post('items/{item}/details', [\App\Http\Controllers\ItemDetailController::class, 'store'])->name('items.details.store');
 
+    // Statistiche avanzate
+    Route::get('statistiche', [\App\Http\Controllers\Admin\StatisticsController::class, 'index'])->name('statistiche');
+
     // Storico utilizzi pezzo
     Route::get('items/details/{id}/storico', [\App\Http\Controllers\ItemDetailController::class, 'storico']);
 

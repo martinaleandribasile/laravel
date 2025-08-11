@@ -17,6 +17,14 @@ h1{
     color: #222e3c;
 }
 
+h2{
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    line-height: 1.0;
+    color: #222e3c;
+}
+
 /* Layout principale */
 .admin-dashboard {
   display: flex;

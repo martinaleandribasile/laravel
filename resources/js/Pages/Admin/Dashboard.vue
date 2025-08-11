@@ -17,9 +17,10 @@
       <h3 class="sidebar-title"> Benvenuto: {{ userName }}</h3>
       <nav>
         <ul>
-          <li><Link href="/admin/items">Inventario</Link></li>
-          <li><Link :href="route('admin.requests.index')">Richieste</Link></li>
-          <li><a href="#statistiche">Statistiche</a></li>
+            <li><Link href="/admin/dashboard">Home</Link></li>
+            <li><Link href="/admin/items">Inventario</Link></li>
+            <li><Link :href="route('admin.requests.index')">Richieste</Link></li>
+            <li><Link href="/admin/statistiche">Statistiche</Link></li>
         </ul>
       </nav>
     </aside>
