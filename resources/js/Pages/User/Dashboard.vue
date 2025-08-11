@@ -1,15 +1,57 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+<template>
+  <div class="user-dashboard">
+    <nav class="navbar">
+      <div class="logo">
+        <span class="logo-w">W</span><span class="logo-e">ea</span><span class="logo-r">r</span><span class="logo-h">h</span><span class="logo-o">ou</span><span class="logo-s">s</span><span class="logo-e2">e</span>
+      </div>
+      <div class="profile-menu">
+        <span class="profile-name">{{ userName }}</span>
+        <div class="dropdown">
+          <button class="profile-btn">Profilo ▾</button>
+          <div class="dropdown-content">
+            <a href="/profile">Profilo</a>
+            <button @click="logout" class="logout-btn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <aside class="sidebar">
+      <h2>Utente</h2>
+      <nav>
+        <ul>
+          <li><a href="#richieste">Le mie richieste</a></li>
+          <li><a href="#storico">Storico</a></li>
+          <li><a href="#profilo">Profilo</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <header class="header">
+        <h1>Dashboard Utente</h1>
+      </header>
+    </main>
+  </div>
+</template>
 
-/* Layout principale */
-.admin-dashboard {
+<script setup>
+import { computed } from 'vue';
+import { usePage, useForm } from '@inertiajs/vue3';
+
+const page = usePage();
+const userName = computed(() => page.props.auth?.user?.name || '');
+
+const form = useForm({});
+function logout() {
+  form.post('/logout');
+}
+</script>
+
+<style scoped>
+.user-dashboard {
   display: flex;
   min-height: 100vh;
   background: #f7f8fa;
 }
-
-/* Navbar */
 .navbar {
   position: fixed;
   top: 0;
@@ -39,7 +81,6 @@
 .logo-o { color: #4fd1c5; }
 .logo-s { color: #fbbf24; }
 .logo-e2 { color: #222e3c; }
-
 .profile-menu {
   display: flex;
   align-items: center;
@@ -102,8 +143,6 @@
   color: #e53e3e;
   font-weight: 600;
 }
-
-/* Sidebar */
 .sidebar {
   width: 220px;
   background: #222e3c;
@@ -133,10 +172,28 @@
 .sidebar a:hover {
   color: #4fd1c5;
 }
-
-/* Main content */
 .main-content {
   flex: 1;
   padding: 2rem 3rem;
   margin-top: 64px;
 }
+.header {
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 2rem;
+}
+.header h1 {
+  font-size: 2rem;
+  color: #222e3c;
+}
+.section {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+}
+.section h2 {
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+</style>
