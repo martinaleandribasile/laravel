@@ -19,8 +19,9 @@
         <nav>
           <ul>
             <li><Link href="/admin/dashboard">Home</Link></li>
-            <li><a href="#richieste">Richieste</a></li>
-            <li><a href="#statistiche">Statistiche</a></li>
+            <li><Link href="/admin/items">Inventario</Link></li>
+            <li><Link :href="route('admin.requests.index')">Richieste</Link></li>
+            <li><Link href="#statistiche">Statistiche</Link></li>
           </ul>
         </nav>
       </aside>
@@ -82,7 +83,7 @@
     </div>
     <div v-if="showEditModal" class="modal-overlay">
       <div class="modal-content">
-        <h2 class="modal-title">Modifica Articolo</h2>
+        <h2 class="modal-title">Modifica Articolo {{ editItem.name }}</h2>
         <form @submit.prevent="submitEdit">
           <div class="form-group">
             <label>Nome</label>
@@ -91,14 +92,6 @@
           <div class="form-group">
             <label>Categoria</label>
             <input v-model="editItem.category.name" required />
-          </div>
-          <div class="form-group">
-            <label>Stato</label>
-            <select v-model="editItem.status" required>
-              <option value="available">Disponibile</option>
-              <option value="unavailable">Non disponibile</option>
-              <option value="maintenance">Manutenzione</option>
-            </select>
           </div>
           <div class="form-group">
             <label>Quantità</label>
@@ -114,9 +107,14 @@
   </div>
 </template>
 
+
 <script setup>
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { defineProps, ref, reactive } from 'vue';
+const logoutForm = useForm({});
+function logout() {
+  logoutForm.post('/logout');
+}
 
 const props = defineProps({
   items: Array,

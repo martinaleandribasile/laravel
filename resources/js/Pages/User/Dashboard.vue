@@ -5,7 +5,6 @@
         <span class="logo-w">W</span><span class="logo-e">ea</span><span class="logo-r">r</span><span class="logo-h">h</span><span class="logo-o">ou</span><span class="logo-s">s</span><span class="logo-e2">e</span>
       </div>
       <div class="profile-menu">
-        <span class="profile-name">{{ userName }}</span>
         <div class="dropdown">
           <button class="profile-btn">Profilo ▾</button>
           <div class="dropdown-content">
@@ -16,13 +15,11 @@
       </div>
     </nav>
     <aside class="sidebar">
-      <h2>Utente</h2>
+       <h3 class="sidebar-title"> Benvenuto: {{ userName }}</h3>
       <nav>
         <ul>
             <li><Link :href="route('user.inventory')">Inventario</Link></li>
-            <li><a href="#richieste">Le mie richieste</a></li>
-            <li><a href="#storico">Storico</a></li>
-            <li><a href="#profilo">Profilo</a></li>
+            <li><Link :href="route('user.requests.index')">Le mie richieste</Link></li>
         </ul>
       </nav>
     </aside>

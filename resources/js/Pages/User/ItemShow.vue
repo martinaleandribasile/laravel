@@ -17,9 +17,9 @@
             <h2>{{ userName }}</h2>
             <nav>
             <ul>
-                <li><Link href="/admin/dashboard">Home</Link></li>
-                <li><a href="#richieste">Richieste</a></li>
-                <li><a href="#statistiche">Statistiche</a></li>
+                <li><Link :href="route('user.dashboard')">Home</Link></li>
+                <li><Link :href="route('user.inventory')">Inventario</Link></li>
+                <li><Link :href="route('user.requests.index')">Le mie richieste</Link></li>
             </ul>
             </nav>
         </aside>
@@ -56,11 +56,28 @@
             <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                 <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
                     <h2 class="text-xl font-semibold mb-4">Richiesta pezzo</h2>
-                    <p class="mb-4">Vuoi richiedere il pezzo serial <b>{{ selectedDetail?.serial }}</b>?</p>
-                    <div class="flex justify-end gap-2">
-                    <button @click="showModal = false" class="px-4 py-2 rounded border">Annulla</button>
-                    <button @click="confirmRequest" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Conferma</button>
-                    </div>
+                    <form @submit.prevent="confirmRequest">
+                        <div class="mb-3">
+                            <label class="block mb-1 font-semibold">Serial:</label>
+                            <span>{{ selectedDetail?.serial }}</span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="block mb-1 font-semibold">Data inizio</label>
+                            <input v-model="form.data_inizio" type="date" class="border rounded px-3 py-2 w-full" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="block mb-1 font-semibold">Data fine</label>
+                            <input v-model="form.data_fine" type="date" class="border rounded px-3 py-2 w-full" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="block mb-1 font-semibold">Note aggiuntive</label>
+                            <textarea v-model="form.note" class="border rounded px-3 py-2 w-full" rows="2" placeholder="Aggiungi note opzionali..."></textarea>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Invia richiesta</button>
+                            <button type="button" @click="showModal = false" class="px-4 py-2 text-red-400 border rounded">Annulla</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </main>
@@ -77,24 +94,43 @@ const props = defineProps({
   item: Object,
 });
 
+import { useForm } from '@inertiajs/vue3';
+const logoutForm = useForm({});
+function logout() {
+    logoutForm.post('/logout');
+}
+
 const showModal = ref(false);
 const selectedDetail = ref(null);
+const form = ref({
+    data_inizio: '',
+    data_fine: '',
+    note: '',
+});
 
 function requestDetail(detail) {
-  selectedDetail.value = detail;
-  showModal.value = true;
+    selectedDetail.value = detail;
+    form.value = { data_inizio: '', data_fine: '', note: '' };
+    showModal.value = true;
 }
 
 function confirmRequest() {
-  // router.post(route('user.requests.store'), { item_detail_id: selectedDetail.value.id })
-  alert('Richiesta inviata per serial ' + selectedDetail.value.serial);
-  showModal.value = false;
+    router.post(route('user.requests.store'), {
+        item_detail_id: selectedDetail.value.id,
+        data_inizio: form.value.data_inizio,
+        data_fine: form.value.data_fine,
+        note: form.value.note,
+    }, {
+        onSuccess: () => {
+            showModal.value = false;
+        }
+    });
 }
 
 function statusClass(stato) {
   if (stato === 'disponibile') return 'text-green-600 font-bold';
-  if (stato === 'in_uso') return 'text-yellow-600 font-bold';
-  if (stato === 'in_attesa') return 'text-orange-600 font-bold';
+  if (stato === 'in_uso') return 'text-red-600 font-bold';
+  if (stato === 'in_attesa') return 'text-yellow-600 font-bold';
   return 'text-gray-500';
 }
 </script>

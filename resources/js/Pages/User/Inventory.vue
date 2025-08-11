@@ -18,8 +18,8 @@
             <nav>
             <ul>
                 <li><Link href="/admin/dashboard">Home</Link></li>
-                <li><a href="#richieste">Richieste</a></li>
-                <li><a href="#statistiche">Statistiche</a></li>
+                    <li><Link :href="route('user.inventory')">Inventario</Link></li>
+                <li><Link :href="route('user.requests.index')">Le mie richieste</Link></li>
             </ul>
             </nav>
         </aside>
@@ -47,7 +47,7 @@
                     <td class="px-4 py-2 border-b">{{ item.category?.name }}</td>
                     <td class="px-4 py-2 border-b">{{ item.dettaglio_pezzi?.length || 0 }}</td>
                     <td class="px-4 py-2 border-b">
-                        <Link v-if="item.dettaglio_pezzi?.length" :href="route('user.items.show', item.id)" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Dettaglio</Link>
+                        <Link v-if="item.dettaglio_pezzi?.length" :href="route('user.items.show', [item.id])" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Dettaglio</Link>
                         <span v-else class="text-gray-400">Non disponibile</span>
                     </td>
                     </tr>
@@ -79,6 +79,12 @@ const props = defineProps({
   filters: Object,
 });
 
+import { useForm } from '@inertiajs/vue3';
+const logoutForm = useForm({});
+function logout() {
+    logoutForm.post('/logout');
+}
+
 const filters = ref({
   search: props.filters?.search || '',
   category_id: props.filters?.category_id || '',
@@ -109,7 +115,7 @@ function confirmRequest() {
   max-width: 900px;
 }
 .select-category {
-    width: fit-content;
+    width: 200px;
 }
 td,th{
     text-align: center;

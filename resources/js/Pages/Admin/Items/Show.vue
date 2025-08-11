@@ -18,9 +18,10 @@
                 <h2>{{ userName }}</h2>
                 <nav>
                     <ul>
+                        <li><Link href="/admin/dashboard">Home</Link></li>
                         <li><Link href="/admin/items">Inventario</Link></li>
-                        <li><a href="#richieste">Richieste</a></li>
-                        <li><a href="#statistiche">Statistiche</a></li>
+                        <li><Link :href="route('admin.requests.index')">Richieste</Link></li>
+                        <li><Link href="#statistiche">Statistiche</Link></li>
                     </ul>
                 </nav>
             </aside>
@@ -134,6 +135,11 @@ const props = defineProps({
     in_uso: Number,
     in_attesa: Number,
 });
+
+const logoutForm = useForm({});
+function logout() {
+    logoutForm.post('/logout');
+}
 
 const showAddDetail = ref(false);
 const detailForm = useForm({

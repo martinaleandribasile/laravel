@@ -17,9 +17,10 @@
             <h2>{{ userName }}</h2>
             <nav>
                 <ul>
+                    <li><Link href="/admin/dashboard">Home</Link></li>
                     <li><Link href="/admin/items">Inventario</Link></li>
-                    <li><a href="#richieste">Richieste</a></li>
-                    <li><a href="#statistiche">Statistiche</a></li>
+                    <li><Link :href="route('admin.requests.index')">Richieste</Link></li>
+                    <li><Link href="#statistiche">Statistiche</Link></li>
                 </ul>
             </nav>
         </aside>
@@ -66,6 +67,12 @@
 <script setup>
 import { useForm, Link } from '@inertiajs/vue3';
 import { defineProps } from 'vue';
+
+import { useForm } from '@inertiajs/vue3';
+const logoutForm = useForm({});
+function logout() {
+  logoutForm.post('/logout');
+}
 
 const props = defineProps({
   categories: Array,

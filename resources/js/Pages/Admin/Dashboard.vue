@@ -18,7 +18,7 @@
       <nav>
         <ul>
           <li><Link href="/admin/items">Inventario</Link></li>
-          <li><a href="#richieste">Richieste</a></li>
+          <li><Link :href="route('admin.requests.index')">Richieste</Link></li>
           <li><a href="#statistiche">Statistiche</a></li>
         </ul>
       </nav>
