@@ -89,35 +89,72 @@
                     <table class="pezzi-table">
                         <thead>
                             <tr>
-                            <th>Seriale</th>
-                            <th>Colore</th>
-                            <th>RAM</th>
-                            <th>Altro</th>
-                            <th>Stato</th>
-                            <th>Inizio uso</th>
-                            <th>Fine uso</th>
+                                <th>Seriale</th>
+                                <th>Colore</th>
+                                <th>RAM</th>
+                                <th>Altro</th>
+                                <th>Stato</th>
+                                <th>Inizio uso</th>
+                                <th>Fine uso</th>
+                                <th>Storico</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="pezzo in dettaglio_pezzi" :key="pezzo.id">
-                            <td>{{ pezzo.seriale }}</td>
-                            <td>{{ pezzo.colore }}</td>
-                            <td>{{ pezzo.ram }}</td>
-                            <td>{{ pezzo.altro }}</td>
-                            <td>
-                                <span :class="{
-                                    'status available': pezzo.stato === 'disponibile',
-                                    'status in-attesa': pezzo.stato === 'in_attesa',
-                                    'status in-uso': pezzo.stato === 'in_uso'
-                                }">
-                                    {{ pezzo.stato }}
-                                </span>
-                            </td>
-                            <td>{{ pezzo.data_inizio_uso || '-' }}</td>
-                            <td>{{ pezzo.data_fine_uso || '-' }}</td>
+                                <td>{{ pezzo.seriale }}</td>
+                                <td>{{ pezzo.colore }}</td>
+                                <td>{{ pezzo.ram }}</td>
+                                <td>{{ pezzo.altro }}</td>
+                                <td>
+                                    <span :class="{
+                                        'status available': pezzo.stato === 'disponibile',
+                                        'status in-attesa': pezzo.stato === 'in_attesa',
+                                        'status in-uso': pezzo.stato === 'in_uso'
+                                    }">
+                                        {{ pezzo.stato }}
+                                    </span>
+                                </td>
+                                <td>{{ pezzo.data_inizio_uso || '-' }}</td>
+                                <td>{{ pezzo.data_fine_uso || '-' }}</td>
+                                <td>
+                                    <button class="storico-btn" @click="openStoricoModal(pezzo)">Storico</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
+                    <!-- Modale Storico Pezzo -->
+                    <div v-if="showStoricoModal" class="modal-overlay">
+                        <div class="modal-content">
+                            <h2 class="modal-title">Storico utilizzi - Seriale: {{ storicoPezzo?.seriale }}</h2>
+                            <div v-if="storicoLoading" style="text-align:center; margin:2rem;">
+                                <span class="loader"></span>
+                            </div>
+                            <div v-else>
+                                <table v-if="storicoData.length" class="pezzi-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Utente</th>
+                                            <th>Data inizio</th>
+                                            <th>Data fine</th>
+                                            <th>Note</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="uso in storicoData" :key="uso.id">
+                                            <td>{{ uso.user?.name || '-' }}</td>
+                                            <td>{{ uso.data_inizio || '-' }}</td>
+                                            <td>{{ uso.data_fine || '-' }}</td>
+                                            <td>{{ uso.note || '-' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div v-else style="text-align:center; margin:2rem;">Nessuno storico trovato.</div>
+                            </div>
+                            <div class="modal-actions">
+                                <button class="cancel-btn" @click="showStoricoModal = false">Chiudi</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
@@ -126,8 +163,9 @@
 </template>
 
 <script setup>
-import { Link, router, useForm } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import axios from 'axios';
 const props = defineProps({
     item: Object,
     dettaglio_pezzi: Array,
@@ -151,6 +189,27 @@ const detailForm = useForm({
     data_inizio_uso: '',
     data_fine_uso: '',
 });
+
+// Storico pezzo
+const showStoricoModal = ref(false);
+const storicoPezzo = ref(null);
+const storicoData = ref([]);
+const storicoLoading = ref(false);
+
+async function openStoricoModal(pezzo) {
+    showStoricoModal.value = true;
+    storicoPezzo.value = pezzo;
+    storicoData.value = [];
+    storicoLoading.value = true;
+    try {
+        const res = await axios.get(`/admin/items/details/${pezzo.id}/storico`);
+        storicoData.value = res.data.storico || [];
+    } catch (e) {
+        storicoData.value = [];
+    } finally {
+        storicoLoading.value = false;
+    }
+}
 
 function submitDetail() {
     detailForm.post(`/admin/items/${props.item.id}/details`, {
@@ -190,6 +249,20 @@ function submitDetail() {
 }
 .pezzi-table thead {
   background: #f7f8fa;
+}
+
+.storico-btn {
+    background: #3182ce;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.storico-btn:hover {
+    background: #2b6cb0;
 }
 </style>
 <style scoped>

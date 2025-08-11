@@ -9,6 +9,13 @@ use Inertia\Inertia;
 
 class ItemDetailController extends Controller
 {
+    public function storico($id)
+    {
+        $detail = ItemDetail::with(['usages.user'])->findOrFail($id);
+        return response()->json([
+            'storico' => $detail->usages
+        ]);
+    }
     public function store(Request $request, Item $item)
     {
         $data = $request->validate([

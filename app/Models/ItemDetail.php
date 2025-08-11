@@ -24,4 +24,9 @@ class ItemDetail extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function usages()
+    {
+        return $this->hasMany(\App\Models\ItemDetailUsage::class, 'item_detail_id');
+    }
 }

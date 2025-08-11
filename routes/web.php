@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::post('items/{item}/details', [\App\Http\Controllers\ItemDetailController::class, 'store'])->name('items.details.store');
 
+    // Storico utilizzi pezzo
+    Route::get('items/details/{id}/storico', [\App\Http\Controllers\ItemDetailController::class, 'storico']);
+
         // Gestione richieste
         Route::get('requests', [\App\Http\Controllers\AdminRequestController::class, 'index'])->name('requests.index');
     Route::post('requests/{user_request}/confirm', [\App\Http\Controllers\AdminRequestController::class, 'confirm'])->name('requests.confirm');
